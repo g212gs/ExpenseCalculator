@@ -6,23 +6,47 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeScreen: View {
     @Environment(AppMainRouter.self) var router
     @StateObject var viewModel: HomeViewModel = HomeViewModel()
     @State var showAddExpenseSheet: Bool = false
-        
+    
+    @Environment(\.modelContext) private var modelContext
+    @Query private var items: [ExpenseModel]
+    
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
     
     var body: some View {
         VStack {
-            if viewModel.isExpenseAvailable() {
-                Text(viewModel.expenseList.first?.name ?? "N/A")
-            } else {
+            //            if viewModel.isExpenseAvailable() {
+            //                Text(viewModel.expenseList.first?.name ?? "N/A")
+            //            } else {
+            //                EmptyExpenseListView(showAddExpenseSheet: $showAddExpenseSheet)
+            //            }
+            
+            if items.isEmpty {
                 EmptyExpenseListView(showAddExpenseSheet: $showAddExpenseSheet)
+            } else {
+                List {
+                    ForEach(items) { items in
+                        HStack {
+                            Text(items.name)
+                            
+                            Spacer()
+                            
+                            Text(convertAmt(items.amount))
+                        }
+                    }
+                    .onDelete { indexes in
+                        for index in indexes {
+                            delete(items[index])
+                        }
+                    }
+                }
+                
             }
-            
-            
         }
         .navigationTitle(
             Text("Home")
@@ -30,12 +54,30 @@ struct HomeScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-                    debugPrint("Settings")
-                    viewModel.settingTapped()
-                }) {
-                    Image(systemName: "gearshape")
-                        .foregroundColor(.primaryTextColor)
+                HStack {
+                    if items.count > 0 {
+                        Button(action: {
+                            showAddExpenseSheet.toggle()
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .foregroundColor(.primaryTextColor)
+                        }
+                    }
+                    
+                    Button(action: {
+                        debugPrint("Settings")
+                        viewModel.settingTapped()
+                    }) {
+                        Image(systemName: "gearshape")
+                            .foregroundColor(.primaryTextColor)
+                    }
+                }
+            }
+            ToolbarItem(placement: .bottomBar) {
+                HStack {
+                    Spacer()
+                    Text("Total: \(getTotalAmount())")
+                        .font(.headline)
                 }
             }
         }
@@ -61,6 +103,29 @@ struct HomeScreen: View {
             router.pushToScreen(route: path)
         }
         .store(in: &viewModel.navigationCancellable)
+    }
+    
+    func delete(_ item: ExpenseModel) {
+        modelContext.delete(item)
+    }
+    
+    func convertAmt(_ amount: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 0
+        formatter.locale = .current
+        
+        if let formattedAmount = formatter.string(from: NSNumber(value: amount)) {
+            return formattedAmount
+        } else {
+            return "--"
+        }
+    }
+    
+    func getTotalAmount() -> String {
+        let totalAmt =  items.reduce(0) { $0 + $1.amount }
+        return convertAmt(totalAmt)
     }
 }
 

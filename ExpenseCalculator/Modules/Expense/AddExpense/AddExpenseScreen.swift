@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddExpenseScreen: View {
     
@@ -14,6 +15,7 @@ struct AddExpenseScreen: View {
     @State var selectedIndex: Int = 0
     @FocusState var textfieldFocus: Bool
     
+    @Environment(\.modelContext) private var modelContext
     
     let maxLength = 5 // We can make it anything
     
@@ -76,7 +78,13 @@ struct AddExpenseScreen: View {
                     Button {
                         textfieldFocus = false
                         viewModel.addExpense(withIndex: selectedIndex)
+                        
+                        addItem(withName: viewModel.expenseList[selectedIndex].name,
+                                amount: Double(truncating: viewModel.expenseAmt as NSNumber),
+                                imageName: viewModel.expenseList[selectedIndex].icon)
+                        
                         presentationMode.wrappedValue.dismiss()
+                        
                     } label: {
                         Text("Add Expense")
                             .foregroundColor(.secondaryColor)
@@ -93,6 +101,11 @@ struct AddExpenseScreen: View {
             .padding(.all, 0)
             .background(textfieldFocus ? Color.gray.opacity(0.2) : Color.clear)
         }
+    }
+    
+    func addItem(withName name: String, amount: Double, imageName: String) {
+        let expenseModel: ExpenseModel = ExpenseModel(name: name, amount: amount, imageName: imageName)
+        modelContext.insert(expenseModel)
     }
     
 }
