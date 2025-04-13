@@ -1,5 +1,5 @@
 # Expense Calculator
-  SwiftUI - Authenticate via Phone Number using Firebase, NavigationStack
+  SwiftUI - Authenticate via Phone Number using Firebase, NavigationStack, SwiftData
 
 [![Swift Version][swift-image]][swift-url]
 [![License][license-image]][license-url]
@@ -7,7 +7,7 @@
 <p align="center">
   <img src="https://i.imgur.com/mdg2Gc6.png" alt="Initial screen" width="120" />
   <img src="https://i.imgur.com/e4pG59J.png" alt="Login screen" width="120" />
-  <img src="https://i.imgur.com/tfmh5D5.png" alt="Home screen" width="120"/>
+  <img src="https://i.imgur.com/qAqA0YW.png" alt="Home screen" width="120"/>
   <img src="https://i.imgur.com/lHqvXyO.png" alt="Add expense screen" width="120"/>
 </p>
 
@@ -20,6 +20,7 @@
 - [x] Bottomsheet - with added different possibility
 - [x] TabView for page effect & page indicator (only in dark mode)
 - [x] Currency Textfield - custom handling for adding currency symbol
+- [x] SwiftData implementation
 
 
 # TODO
