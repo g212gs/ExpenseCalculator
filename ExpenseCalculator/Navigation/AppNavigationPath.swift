@@ -15,6 +15,7 @@ enum AppMainNavigationPath {
     case accountSetting
     case expenseList
     case expenseDetail
+    case addExpense
 }
 
 extension AppMainNavigationPath {
@@ -45,6 +46,8 @@ extension AppMainNavigationPath {
             return 2
         case .expenseDetail:
             return 3
+        case .addExpense:
+            return 2
         }
     }
 }

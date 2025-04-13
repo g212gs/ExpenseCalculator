@@ -1,4 +1,4 @@
-# ExpenseCalculator
+# Expense Calculator
   SwiftUI - Authenticate via Phone Number using Firebase, NavigationStack
 
 [![Swift Version][swift-image]][swift-url]
@@ -7,7 +7,8 @@
 <p align="center">
   <img src="https://i.imgur.com/mdg2Gc6.png" alt="Initial screen" width="120" />
   <img src="https://i.imgur.com/e4pG59J.png" alt="Login screen" width="120" />
-  <img src="https://i.imgur.com/TU8MSYL.png" alt="Home screen" width="120"/>
+  <img src="https://i.imgur.com/tfmh5D5.png" alt="Home screen" width="120"/>
+  <img src="https://i.imgur.com/lHqvXyO.png" alt="Add expense screen" width="120"/>
 </p>
 
 # Features
@@ -16,6 +17,9 @@
 - [x] Swift Package Manager usage 
 - [x] Navigation Stack structure - Push, Pop back, Pop to root, Pop to specific screen
 - [x] SFSymbol with animation
+- [x] Bottomsheet - with added different possibility
+- [x] TabView for page effect & page indicator (only in dark mode)
+- [x] Currency Textfield - custom handling for adding currency symbol
 
 
 # TODO

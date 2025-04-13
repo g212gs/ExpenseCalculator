@@ -38,6 +38,9 @@ struct AppMainCoordinator: View {
                         EmptyView()
                     case .expenseList:
                         EmptyView()
+                    case .addExpense:
+                        AddExpenseScreen()
+                            .environment(router)
                     }
                 }
         }
