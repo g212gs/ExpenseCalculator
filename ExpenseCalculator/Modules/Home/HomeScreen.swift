@@ -7,32 +7,38 @@
 
 import SwiftUI
 import SwiftData
+//import CoreData
 
 struct HomeScreen: View {
     @Environment(AppMainRouter.self) var router
     @StateObject var viewModel: HomeViewModel = HomeViewModel()
     @State var showAddExpenseSheet: Bool = false
     
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [ExpenseModel]
+    // For SwiftData
+//        @Environment(\.modelContext) private var modelContext
+//        @Query private var items: [ExpenseModel]
+    
+    // For CoreData
+    @Environment(\.managedObjectContext) private var managedObjectContext
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \ExpenseList.date, ascending: true)],
+            animation: .default)
+    private var items: FetchedResults<ExpenseList>
+    
+    
+
     
     let heights = stride(from: 0.1, through: 1.0, by: 0.1).map { PresentationDetent.fraction($0) }
     
     var body: some View {
         VStack {
-            //            if viewModel.isExpenseAvailable() {
-            //                Text(viewModel.expenseList.first?.name ?? "N/A")
-            //            } else {
-            //                EmptyExpenseListView(showAddExpenseSheet: $showAddExpenseSheet)
-            //            }
-            
             if items.isEmpty {
                 EmptyExpenseListView(showAddExpenseSheet: $showAddExpenseSheet)
             } else {
                 List {
                     ForEach(items) { items in
                         HStack {
-                            Text(items.name)
+                            Text(items.title ?? "")
                             
                             Spacer()
                             
@@ -105,8 +111,18 @@ struct HomeScreen: View {
         .store(in: &viewModel.navigationCancellable)
     }
     
-    func delete(_ item: ExpenseModel) {
-        modelContext.delete(item)
+    // For SwiftData -> Model name ExpenseModel
+//    func delete(_ item: ExpenseModel) {
+//        modelContext.delete(item)
+//    }
+    // For CoreData -> Model name ExpenseList
+    func delete(_ item: ExpenseList) {
+        managedObjectContext.delete(item)
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("Failed to delete: \(error)")
+        }
     }
     
     func convertAmt(_ amount: Double) -> String {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+//import CoreData
 
 struct AddExpenseScreen: View {
     
@@ -15,7 +16,10 @@ struct AddExpenseScreen: View {
     @State var selectedIndex: Int = 0
     @FocusState var textfieldFocus: Bool
     
-    @Environment(\.modelContext) private var modelContext
+    // For SwiftData
+//    @Environment(\.modelContext) private var modelContext
+    // For CoreData
+    @Environment(\.managedObjectContext) private var managedObjectContext
     
     let maxLength = 5 // We can make it anything
     
@@ -79,7 +83,7 @@ struct AddExpenseScreen: View {
                         textfieldFocus = false
                         viewModel.addExpense(withIndex: selectedIndex)
                         
-                        addItem(withName: viewModel.expenseList[selectedIndex].name,
+                        addItem(withTitle: viewModel.expenseList[selectedIndex].name,
                                 amount: Double(truncating: viewModel.expenseAmt as NSNumber),
                                 imageName: viewModel.expenseList[selectedIndex].icon)
                         
@@ -103,9 +107,23 @@ struct AddExpenseScreen: View {
         }
     }
     
-    func addItem(withName name: String, amount: Double, imageName: String) {
-        let expenseModel: ExpenseModel = ExpenseModel(name: name, amount: amount, imageName: imageName)
-        modelContext.insert(expenseModel)
+    func addItem(withTitle title: String, amount: Double, imageName: String) {
+        // For SwiftData
+//        let expenseModel: ExpenseModel = ExpenseModel(title: title, amount: amount, imageName: imageName)
+//        modelContext.insert(expenseModel)
+        
+        // For CoreData
+        let expenseModel: ExpenseList = ExpenseList(context: managedObjectContext)
+        expenseModel.id = UUID()
+        expenseModel.date = Date()
+        expenseModel.title = title
+        expenseModel.amount = amount
+        
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("Error saving context: \(error)")
+        }
     }
     
 }

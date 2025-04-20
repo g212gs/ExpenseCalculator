@@ -11,13 +11,13 @@ import SwiftData
 @Model
 class ExpenseModel: Identifiable {
     var id: String
-    var name: String
+    var title: String
     var amount: Double
     var imageName: String
     
-    init(name: String, amount: Double, imageName: String) {
+    init(title: String, amount: Double, imageName: String) {
         self.id = UUID().uuidString
-        self.name = name
+        self.title = title
         self.amount = amount
         self.imageName = imageName
     }
